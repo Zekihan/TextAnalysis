@@ -17,7 +17,6 @@ import matplotlib.colors as mcolors
 import nltk
 import numpy as np
 import pandas as pd
-from bokeh.io import output_notebook
 from bokeh.plotting import figure, show
 from gensim.utils import simple_preprocess
 from matplotlib import pyplot as plt
@@ -48,11 +47,12 @@ stemmer = WordNetLemmatizer()
 
 
 def clean_text(text):
-    """Make text lowercase, remove text in square brackets,remove links,remove punctuation
-    and remove words containing numbers."""
+    '''Make text lowercase, remove text in square brackets,remove links,remove punctuation
+    and remove words containing numbers.'''
     text = str(text).lower()
-    text = re.sub('[.*?]', '', text)
+    text = re.sub('\[.*?\]', '', text)
     # text = re.sub('https?://\S+|www\.\S+', '', text)
+    string = ""
 
     # Removing link
     url_pattern = r'((http|ftp|https):\/\/)?[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?'
@@ -73,7 +73,7 @@ def clean_text(text):
     text = re.sub(r'\s+', ' ', text, flags=re.I)
 
     text = re.sub('\n', '', text)
-    text = re.sub('w*dw*', '', text)
+    text = re.sub('\w*\d\w*', '', text)
 
     # Lemmatization
     # text = text.split()
@@ -365,7 +365,6 @@ tsne_model = TSNE(n_components=2, verbose=1, random_state=0, angle=.99, init='pc
 tsne_lda = tsne_model.fit_transform(arr)
 
 # Plot the Topic Clusters using Bokeh
-output_notebook()
 n_topics = 2
 mycolors = np.array([color for name, color in mcolors.TABLEAU_COLORS.items()])
 plot = figure(title="t-SNE Clustering of {} LDA Topics".format(n_topics),
